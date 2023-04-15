@@ -2,6 +2,8 @@
 
 We use React to create a simple Video Player, this allows us to interact with the player using its own controls or you can create your owns.
 
+NOTE: **The copyright of the video stored in this project is under the license of its owner and used for the purpose of this player.**
+
 ## First steps
 
 1. Open a **CLI** (*Command Line Interface*) window.
@@ -82,7 +84,7 @@ If you need more information about how to start with React for the first time, y
 > :file_folder: node_modules
 > :file_folder: public
     > * :page_facing_up: index.html
-
+>
 > :file_folder: src
     > * :file_folder: assets
     > * :file_folder: components
@@ -91,10 +93,12 @@ If you need more information about how to start with React for the first time, y
     > * :page_facing_up: App.js
     > * :page_facing_up: index.css
     > * :page_facing_up: index.js
-
+>
+>
 > :page_facing_up: .babelrc
 > :page_facing_up: .gitignore
 > :page_facing_up: package-lock.json
 > :page_facing_up: package.json
 > :page_facing_up: webpack.config.js
 > :page_facing_up: README.md
+>
