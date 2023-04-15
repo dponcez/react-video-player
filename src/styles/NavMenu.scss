@@ -1,0 +1,45 @@
+@import '_variables';
+
+.Nav--menu,
+.Nav--menu__list {
+  display: flex;
+  align-items: center;
+}
+
+.Nav {
+  display: block;
+  width: $size;
+  height: auto;
+  position: fixed;
+  top: .6rem;
+  left: 0;
+  z-index: 2;
+  &--menu {
+    justify-content: space-evenly;
+    max-width: 22rem;
+    &__list {
+      justify-content: center;
+      width: 6rem;
+      height: 2rem;
+      list-style: none;
+      padding: 0;
+      &:last-child {
+        color: $light-gray;
+        background-color: $dark-blue;
+        border-radius: $radius;
+        & > .Nav--menu__link { color: $light-gray; }
+      }
+    }
+
+    &__link {
+      padding: .125rem 1rem;
+      color: var(--dark-color);
+      font-family: $font-play;
+      font-size: $padding * .75;
+      text-decoration: none;
+      text-transform: capitalize
+    }
+
+    #dark &__link { color: var(--light-color); }
+  }
+}

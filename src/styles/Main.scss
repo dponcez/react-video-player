@@ -1,0 +1,42 @@
+@import '_variables';
+
+#light {
+  background-color: var(--light-color);
+  color: var(--dark-color)
+}
+
+#dark {
+  background-color: var(--dark-color);
+  color: var(--light-color)
+}
+
+.container,
+.header,
+.sub--container {
+  display: flex;
+  align-items: center;
+}
+
+.container,
+.header { justify-content: center; }
+
+.container {
+  flex-direction: column;
+  height: $height;
+  .sub--container {
+    width: $size;
+    height: 5rem;
+  }
+
+  .header {
+    width: $size;
+    padding-block-start: 3rem;
+    padding-block-end: 2rem;
+    .heading {
+      font-size: $fnt-sz;
+      font-family: $font-inter;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+  }
+}

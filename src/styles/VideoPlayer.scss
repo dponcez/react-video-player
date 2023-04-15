@@ -1,0 +1,35 @@
+@import '_variables';
+
+.figure {
+  width: $size;
+  max-width: 42rem;
+  margin: 0;
+  padding-inline: 1rem;
+
+  .hidden {
+    position: relative;
+    overflow: hidden;
+    &:hover .control--panel {
+      bottom: 0;
+      transition: bottom .5s ease-in
+    }
+  }
+
+  .figcaption {
+    width: $size;
+    height: 4rem;
+    .status,
+    .artist {
+      padding-inline-start: .35rem;
+      text-transform: capitalize;
+      font-family: $font-inter;
+    }
+
+    .status { 
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .artist { font-size: 1.25rem; }
+  }
+}
