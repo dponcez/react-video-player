@@ -80,25 +80,15 @@ If you need more information about how to start with React for the first time, y
 
 ## Your own folder structure
 
-> **REACTJS-CUSTOM-VIDEO-PLAYER**
-> :file_folder: node_modules
-> :file_folder: public
-    > * :page_facing_up: index.html
->
-> :file_folder: src
-    > * :file_folder: assets
-    > * :file_folder: components
-    > * :file_folder: styles
-    > * :page_facing_up: App.css
-    > * :page_facing_up: App.js
-    > * :page_facing_up: index.css
-    > * :page_facing_up: index.js
->
->
-> :page_facing_up: .babelrc
-> :page_facing_up: .gitignore
-> :page_facing_up: package-lock.json
-> :page_facing_up: package.json
-> :page_facing_up: webpack.config.js
-> :page_facing_up: README.md
->
+You can create your own React folder structure of your React project as shown in the image below, or create a different structure.
+
+<figure>
+    <img src='https://i.postimg.cc/9fhGTGYx/react-folder-structure.png' alt='react folder structure'/>
+    <figcaption>
+        <p>React folder structure</p>
+    </figcaption>
+</figure>
+
+The image above was uploaded and hosted on <a href='https://postimages.org/'>postimage.org</a> to be used in this project. 
+
+Go to [postimages.org](https://postimages.org) and upload your images for free and get a free hosting to share your photos for websites or forums.
