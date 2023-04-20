@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-const UpdateVideoElement = (videoRef) => {
+const updateVideoElement = (videoRef) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -121,4 +121,4 @@ const UpdateVideoElement = (videoRef) => {
   };
 }
 
-export {UpdateVideoElement}
+export {updateVideoElement}

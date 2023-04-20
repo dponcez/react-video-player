@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import { UpdateVideoElement } from '../UpdateVideoElement/UpdateVideoElement'
+import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { Volume } from '../Volume/Volume'
 import { Controls } from '../Controls/Controls'
@@ -48,7 +48,7 @@ const VideoPlayer = () => {
     handleTimeUpdate,
     handleVolumeMute,
     handleVolumeChange
-  } = UpdateVideoElement(videoElement)
+  } = updateVideoElement(videoElement)
 
   return (
     <figure className="figure">
