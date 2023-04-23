@@ -351,8 +351,8 @@ const VideoPlayer = () => {
     const handleClick = () => {
         if(!videoRef.current) return
         isPlaying ? 
-            videoRef.current.play() :
-            videoRef.current.pause()
+            videoRef.current.pause() :
+            videoRef.current.play()
     }
 
     return (
@@ -374,6 +374,826 @@ const VideoPlayer = () => {
                                     isPlaying ?
                                         'Pause' :
                                         'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+9. Now we will create a progress bar to visualize the movement of the current task.
+
+```js
+import React from 'react'
+
+const ProgressBar = ({value, onChange, className}) => {
+  return (
+    <div className="progress" data-progress="progress" role="progressbar">
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={value}
+        onChange={onChange}
+        className={className} 
+        data-progress-bar="progress--bar"/>
+    </div>
+  )
+}
+
+export { ProgressBar }
+```
+
+10. We will import our ProgressBar component into our VideoPlayer and use it in our structure, in the section tag with the class name 'panel--controls'.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+        }
+    },[videoRef.current])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={}
+                            value={}
+                            />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+11. Now we will create a function that handle our current progress, like the example below.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+        }
+    },[videoRef.current])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {}
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={}
+                            value={}
+                            />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+12. Now it´s time to work with our handleProgress function like so.
+
+```js
+const handleProgress = (e) => {
+    const value = Number(e.target.value);
+    const {duration} = videoRef.current;
+    videoRef.current.currentTime = (duration / 100) * value;
+    setProgress(value)
+}
+```
+
+This is how it looks like our example.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                            />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+13. Now we'll create a handleTimeUpdate function to fire the event when the currentTime attribute has been updated.
+
+Information about this attribute, go to [HTMLMediaElement: timeupdate event](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/timeupdated_event) in Mozilla Developer Network (MDN).
+
+```js
+function handleTimeUpdate = () => {
+    const {currentTime, duration} = videoRef.current;
+    const progress = parsetInt(Number(currentTime / duration) * 100);
+    setMediaTime(currentTime)
+    setProgress(progress)
+}
+```
+
+This is how our example looks like.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                            />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+14. Our example looks good, now we'll create another component called Volume like so and import it in our VideoPlayer component.
+
+```js
+import React from 'react'
+
+const Volume = ({max, value, mode, onClick, onChange}) => {
+  return (
+    <div className="volume--container" role="volume and slider container">
+      <button
+        className="mute--btn btn btn--medium"
+        data-mute="mute"
+        title="Mute Sound"
+        aria-describedby="mute button"
+        onClick={onClick}
+      >
+        {mode}
+      </button>
+      <input
+        type="range"
+        name="slider"
+        className="slider"
+        id="slide"
+        data-slider="slider"
+        min="0"
+        max={max}
+        value={value}
+        step="1"
+        aria-required="false"
+        aria-autocomplete="false"
+        aria-invalid="false"
+        autoComplete="false"
+        role="slider"
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
+export { Volume }
+```
+
+15. Now we import our Volume component into VideoPlayer.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={}
+                            value={}
+                            onChange={}
+                            onClick={}
+                        />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+16. Now we create some functions to help us to handle our Volume component like so, and into our *useEffect* method we create *onMute* and *onUnMute* functions respectively and we'll fire an event as we did with our play button.
+
+```js
+const [volume, setVolume] = useState(0)
+const [isMute, setIsMute] = useState(false)
+
+useEffect(() => {
+    const onMute = () => setIsMute(true)
+    const onUnMute = () => setIsMute(false)
+
+    element.addEventListener('mute', onMute)
+    element.addEventListener('unmute', onUnMute)
+
+    return () => {
+        element.removeEventListener('mute', onMute)
+        element.removeEventLIstener('unmute', onUnMute)
+    }
+} [])
+
+const handleVolumeChange = (e) => {
+    const value = Number(e.target.value);
+    const volRange = value / 100;
+    videoRef.current.volume = volRange;
+    setVolume(value)
+}
+
+const handleVolumeMute = () => {
+    if(!videoRef.current) return;
+
+    isMute ? 
+        videoRef.current.muted = false :
+        videoRef.current.muted = true
+    
+    setIsMute(!isMute)
+}
+```
+
+17. Now we put the example above into our VideoPlayer component like so.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? 'Unmute' : 'Mute'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        'Pause' :
+                                        'Play'
+                                }
+                                onClick={handleClick}
+                            />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+18. Now we change the text into our Volume and Controls components like so.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        <div className='controls'>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
                                 }
                                 onClick={handleClick}
                             />
