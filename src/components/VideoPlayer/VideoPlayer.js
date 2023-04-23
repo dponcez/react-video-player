@@ -45,9 +45,9 @@ const VideoPlayer = () => {
     handleProgress,
     handleSkipBackward,
     handleSkipForward,
-    handleTimeUpdate,
     handleVolumeMute,
-    handleVolumeChange
+    handleVolumeChange,
+    handleTimeUpdate
   } = updateVideoElement(videoElement)
 
   return (
