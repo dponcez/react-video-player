@@ -20,20 +20,11 @@ const updateVideoElement = (videoRef) => {
     const onMute = () => setIsMuted(true);
     const onUnMute = () => setIsMuted(false);
 
-    const onTimeUpdate = () => {
-      const { currentTime, duration } = videoElement;
-      const progress = parseInt(Number(currentTime / duration) * 100);
-      setMediaTime(currentTime);
-      setProgress(progress);
-      setDuration(duration);
-    };
-
     videoElement.addEventListener("play", onPlay);
     videoElement.addEventListener("playing", onPlay);
     videoElement.addEventListener("pause", onPause);
     videoElement.addEventListener("mute", onMute);
     videoElement.addEventListener("unmute", onUnMute);
-    videoElement.addEventListener("timeupdate", onTimeUpdate);
 
     return () => {
       videoElement.removeEventListener("play", onPlay);
@@ -41,7 +32,6 @@ const updateVideoElement = (videoRef) => {
       videoElement.removeEventListener("pause", onPause);
       videoElement.removeEventListener("mute", onMute);
       videoElement.removeEventListener("unmute", onUnMute);
-      videoElement.removeEventListener("timeupdate", onTimeUpdate);
     };
   }, [videoRef.current, progress]);
 
@@ -50,28 +40,19 @@ const updateVideoElement = (videoRef) => {
     isPlaying ? videoRef.current.pause() : videoRef.current.play();
   };
 
-  const handleTimeUpdate = (e) => {
-    if (!videoRef.current) return;
+  const handleTimeUpdate = () => {
     const { currentTime, duration } = videoRef.current;
-    const { left, width } = e.currentTarget.getBoundingClientRect();
-    const getCurrentPosition = (e.clientX - left) / width;
-    if (getCurrentPosition < 0 || getCurrentPosition > 1) return;
-
-    const getMilliseconds = duration * 1000;
-    const elapsedTime = getMilliseconds * getCurrentPosition;
-    const getTimeSeconds = elapsedTime / 1000;
-    let getCurrentTime = currentTime;
-    getCurrentTime = getTimeSeconds;
-    setMediaTime(getCurrentTime);
+    const progress = parseInt(Number(currentTime / duration) * 100);
+    setMediaTime(currentTime);
+    setProgress(progress);
     setDuration(duration);
   };
 
   const handleProgress = (e) => {
-    const value = Number(e.target.value);
-    const { currentTime, duration } = videoRef.current;
-    let getCurrentTime = currentTime;
-    getCurrentTime = (duration / 100) * value;
-    setProgress(getCurrentTime);
+    const value = e.target.valueAsNumber;
+    const { duration } = videoRef.current;
+    videoRef.current.currentTime = (duration / 100) * value;
+    setProgress(value);
   };
 
   const handleVolumeChange = (e) => {
