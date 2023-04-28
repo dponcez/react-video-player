@@ -1,5 +1,6 @@
 import React, {useRef} from 'react'
 import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
+import { formatTime } from '../../utils/formatTime'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { Volume } from '../Volume/Volume'
 import { Controls } from '../Controls/Controls'
@@ -13,23 +14,6 @@ import { SkipForwardButton } from '../SkipForwardButton/SkipForwardButton'
 import video from '../../assets/video/Chosen.mp4'
 import '../../styles/VideoPlayer.scss'
 import '../../styles/VideoControls.scss'
-
-// https://github.com/lkopacz/egghead-react-a11y-audio-player
-// 1. Switch to branch section
-// 2. Choose the branch 09-mute-states
-function formatTime(time){
-  const hours =  Math.floor(~~(time / 3600));
-  const minutes = Math.floor(~~(time % 3600) / 60);
-  const seconds = Math.floor(time % 60);
-
-  let output = '';
-  if(hours > 0) output += `${hours}:${minutes < 10 ? '0' : ''}`
-
-  output += `${minutes}:${seconds < 10 ? '0' : ''}`;
-  output += `${seconds}`;
-
-  return output
-}
 
 const VideoPlayer = () => {
   const videoElement = useRef(null)
@@ -113,7 +97,7 @@ const VideoPlayer = () => {
         </div>
       </div>
       <figcaption className="figcaption">
-        <p className="status">chosen</p>
+        <p className="status">Chosen</p>
         <p className="artist">Blxst ft. Tyga & Ty Dolla $ign</p>
       </figcaption>
     </figure>

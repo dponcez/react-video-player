@@ -1,7 +1,7 @@
 import React from 'react'
-import backwardButton from "../../assets/icons/backward-btn.svg";
-import forwardButton from "../../assets/icons/forward-btn.svg";
 import { ControlButton } from '../ControlButton/ControlButton'
+import forwardButton from "../../assets/icons/forward-btn.svg";
+import backwardButton from "../../assets/icons/backward-btn.svg";
 
 const Controls = ({state, onClick}) => {
   return (
@@ -11,7 +11,7 @@ const Controls = ({state, onClick}) => {
         <div className="player--controls">
           <button
             className="prev btn btn--medium"
-            data-prev="prev"
+            data-next="prev"
             title="Previous"
             aria-describedby="previous button"
           >

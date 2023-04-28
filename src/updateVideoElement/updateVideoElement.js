@@ -37,7 +37,9 @@ const updateVideoElement = (videoRef) => {
 
   const handleClick = () => {
     if (!videoRef.current) return;
-    isPlaying ? videoRef.current.pause() : videoRef.current.play();
+    isPlaying ? 
+      videoRef.current.pause() : 
+      videoRef.current.play();
   };
 
   const handleTimeUpdate = () => {
@@ -98,7 +100,7 @@ const updateVideoElement = (videoRef) => {
     handleSkipForward,
     handleTimeUpdate,
     handleVolumeMute,
-    handleVolumeChange,
+    handleVolumeChange
   };
 }
 
