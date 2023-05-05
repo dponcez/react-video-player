@@ -249,6 +249,7 @@ const VideoPlayer = () => {
                         autoPlay={false}
                     ></video>
                     <section className='panel--controls'>
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={}
@@ -298,6 +299,7 @@ const VideoPlayer = () => {
                         autoPlay={false}
                     ></video>
                     <section className='panel--controls'>
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={}
@@ -368,6 +370,7 @@ const VideoPlayer = () => {
                         autoPlay={false}
                     ></video>
                     <section className='panel--controls'>
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -468,7 +471,8 @@ const VideoPlayer = () => {
                             className="progress--bar"
                             onChange={}
                             value={}
-                            />
+                        />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -549,7 +553,8 @@ const VideoPlayer = () => {
                             className="progress--bar"
                             onChange={}
                             value={}
-                            />
+                        />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -646,7 +651,8 @@ const VideoPlayer = () => {
                             className="progress--bar"
                             onChange={handleProgress}
                             value={progress}
-                            />
+                        />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -754,7 +760,8 @@ const VideoPlayer = () => {
                             className="progress--bar"
                             onChange={handleProgress}
                             value={progress}
-                            />
+                        />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -899,6 +906,7 @@ const VideoPlayer = () => {
                             onChange={}
                             onClick={}
                         />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -1062,6 +1070,7 @@ const VideoPlayer = () => {
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
                         />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -1188,6 +1197,7 @@ const VideoPlayer = () => {
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
                         />
+                        {/* <!-- controls --> */}
                         <div className='controls'>
                             <Controls
                                 state={
@@ -1197,6 +1207,570 @@ const VideoPlayer = () => {
                                 }
                                 onClick={handleClick}
                             />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+19. The next part is to define a function that allows us to go back a few seconds from our current video.
+
+Let´s get started.
+
+```js
+// https://github.com/lkopacz/egghead-react-a11y-audio-player
+const handleSkipBackward = () => {
+    const {currentTime} = videoRef.current;
+    const newTme = Math.max(currentTime - 10, 0);
+    videoRef.current.currentTime = newTime;
+    setMediaTime(newTime)
+}
+```
+
+20. In this section we'll create a function that allows us to jump forward a few seconds from our current video.
+
+```js
+    const handleSkipForward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+```
+
+As you can see in the *handleSkipForward()* function, we call out a duration variable from our *useState hook* like so. 
+
+```js
+    const [duration, setDuration] = useState(0)
+```
+
+21. Let´s make some changes to our code.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+        setDuration(duration)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    const handleSkipBackward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.max(currentTime - 10, 0);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    const handleSkipForward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        {/* <!-- controls --> */}
+                        <div className='controls'>
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipBackward}>
+                                ⏮
+                                </button>
+                            </div>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
+                                }
+                                onClick={handleClick}
+                            />
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipForward}>
+                                ⏭
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+22. Now, we'll work on our current length of the video. In this section we won't create any functions, we will just call our variables *duration* and *mediaTime* and add them in our tags with class name *duration* and *current--time* respectively, like so. 
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+        setDuration(duration)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    const handleSkipBackward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.max(currentTime - 10, 0);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    const handleSkipForward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        {/* <!-- counter / duration --> */}
+                        <div className="timer--container duration" role="timer container">
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(duration)}
+                            </span>
+                        </div>
+                        {/* <!-- controls --> */}
+                        <div className='controls'>
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipBackward}>
+                                ⏮
+                                </button>
+                            </div>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
+                                }
+                                onClick={handleClick}
+                            />
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipForward}>
+                                ⏭
+                                </button>
+                            </div>
+                        </div>
+                        {/* <!-- counter / current time --> */}
+                        <div
+                        className="timer--container current--time"
+                        role="timer container"
+                        >
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(mediaTime)}
+                            </span>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+23. In this section, we'll work on the *formatTime()* function to make the video timer change according to the current progress.
+
+Let's go there.
+
+```js
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    // 1. Switch to branch section
+    // 2. Choose the branch 09-mute-states
+    function formatTime(time){
+        const hours = Math.floor(~~(time / 3600));
+        const minutes = Math.floor(~~(time % 3600) / 60);
+        const seconds = Math.floor(time % 60);
+
+        let output = '';
+        if(hours > 0) output += `${hours}:${minutes < 10 ? '0' : ''}`
+
+        output += `${minutes}:${seconds < 10 ? '0' : ''}`
+        output += `${seconds}`
+
+        return output
+    }
+```
+
+24. Now, let's put the above code in our *videoPlayer* component.
+
+```js
+//VideoPlayer.js
+
+import React, {useState, useEffect, useRef} from 'react'
+import Controls from '../components/Controls/Controls'
+import ProgressBar from '../components/ProgressBar/ProgressBar'
+import Volume from '../components/Volume/Volume'
+import video from '../assets/video/video-prueba.mp4'
+
+// https://github.com/lkopacz/egghead-react-a11y-audio-player
+// 1. Switch to branch section
+// 2. Choose the branch 09-mute-states
+function formatTime(time){
+    const hours = Math.floor(~~(time / 3600));
+    const minutes = Math.floor(~~(time % 3600) / 60);
+    const seconds = Math.floor(time % 60);
+
+    let output = '';
+
+    if(hours > 0) output += `${hours}:${minutes < 10 ? '0' : ''}`
+
+    output += `${minutes}:${seconds < 10 ? '0' : ''}`
+    output += `${seconds}`
+
+    return output
+}
+
+const VideoPlayer = () => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const videoRef = useRef(null)
+
+    useEffect(()=> {
+        const element = videoRef.current
+
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+        setDuration(duration)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    const handleSkipBackward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.max(currentTime - 10, 0);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    const handleSkipForward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        {/* <!-- counter / duration --> */}
+                        <div className="timer--container duration" role="timer container">
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(duration)}
+                            </span>
+                        </div>
+                        {/* <!-- controls --> */}
+                        <div className='controls'>
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipBackward}>
+                                ⏮
+                                </button>
+                            </div>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
+                                }
+                                onClick={handleClick}
+                            />
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipForward}>
+                                ⏭
+                                </button>
+                            </div>
+                        </div>
+                        {/* <!-- counter / current time --> */}
+                        <div
+                        className="timer--container current--time"
+                        role="timer container"
+                        >
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(mediaTime)}
+                            </span>
                         </div>
                     </section>
                 </div>
