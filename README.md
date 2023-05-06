@@ -2,7 +2,7 @@
 
 We use React to create a simple Video Player, this allows us to interact with the player using its own controls or you can create your own.
 
-NOTE: **The copyright of the video stored in this project is under the license of its owner and/or owner and is used for the purpose of this player.**
+NOTE: **The copyright of the video stored in this project is under the license of its owner and/or owners and is used for the purpose of this player and not for commercial use.**
 
 ## First steps
 
@@ -1782,4 +1782,535 @@ const VideoPlayer = () => {
 export default VideoPlayer
 ```
 
-The code above is an excerpt from my React Video Player repository, you can see the full code there.
+25. Now it's time to make our *VideoPlayer* component clearer and separate the logic from the code to make it more consistent with our proyect.
+
+First, we separate the code from our *VideoPlayer* component and create a new file called *updateVideoElement.js* or you can named as you want.
+
+```js
+// updateVideoElement.js
+
+import React, {useState, useEffect} from 'react'
+
+const updateVideoElement = (videoRef) => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMute, setIsMute] = useState(false)
+    const [volume, setVolume] = useState(0)
+    const [progress, setProgress] = useState(0)
+    const [mediaTime, setMediaTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+
+    useEffect(()=> {
+        const element = videoRef.current
+        if(!element) return
+        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+        const onPlay = () => isPlaying(true)
+        const onPause = () => isPlaying(false)
+        const onMute = () => setIsMute(true)
+        const onUnMute = () => setIsMute(false)
+
+        element.addEventListener('play', onPlay)
+        element.addEventListener('playing', onPlay)
+        element.addEventListener('pause', onPause)
+        element.addEventListener('mute', onMute)
+        element.addEventListener('unmute', onUnMute)
+
+        return () => {
+            element.removeEventListener('play', onPlay)
+            element.removeEventListener('playing', onPlay)
+            element.removeEventListener('pause', onPause)
+            element.removeEventListener('mute', onMute)
+            element.removeEventListener('unmute', onUnMute)
+        }
+    },[videoRef.current, progress])
+
+    const handleClick = () => {
+        if(!videoRef.current) return
+        isPlaying ? 
+            videoRef.current.pause() :
+            videoRef.current.play()
+    }
+
+    const handleProgress = (e) => {
+        const value = Number(e.target.value);
+        const {duration} = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value)
+    }
+
+    const handleTimeUpdate = () => {
+        const {currentTime, duration} = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress)
+        setDuration(duration)
+    }
+
+    const handleVolumeChange = (e) => {
+        const value = Number(e.target.value);
+        const volRange = value / 100;
+        videoRef.current.volume = volRange;
+        setVolume(value)
+    }
+
+    const handleVolumeMute = () => {
+        if(!videoRef.current) return;
+        volumeMute ?
+            videoRef.current.muted = false :
+            videoRef.current.muted = true
+        setIsMute(!isMute)
+    }
+
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    const handleSkipBackward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.max(currentTime - 10, 0);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    const handleSkipForward = () => {
+        const {currentTime} = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime)
+    }
+
+    return {
+        volume,
+        isMuted,
+        progress,
+        isPlaying,
+        mediaTime,
+        duration,
+        handleClick,
+        handleProgress,
+        handleSkipBackward,
+        handleSkipForward,
+        handleTimeUpdate,
+        handleVolumeMute,
+        handleVolumeChange
+    }
+}
+
+export {updateVideoElement}
+```
+
+26. In this part we separate the *formatTime.js* file to make our *VideoPlayer* component more clear.
+
+```js
+// https://github.com/lkopacz/egghead-react-a11y-audio-player
+// 1. Switch to branch section
+// 2. Choose the branch 09-mute-states
+function formatTime(time){
+    const hours = Math.floor(~~(time / 3600));
+    const minutes = Math.floor(~~(time % 3600) / 60);
+    const seconds = Math.floor(time % 60);
+
+    let output = '';
+
+    if(hours > 0) output += `${hours}:${minutes < 10 ? '0' : ''}`
+
+    output += `${minutes}:${seconds < 10 ? '0' : ''}`
+    output += `${seconds}`
+
+    return output
+}
+```
+
+27. In this section we will see how our *VideoPlayer* component is clearer and understandable, we also import other components like *ProgressBar*, *Volume* and *Controls*, we even import the *updateVideoElemet* and *formatTime* files
+
+```js
+// VideoPlayer.js
+
+import React, {useRef} from 'react'
+import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
+import { formatTime } from '../../utils/formatTime'
+import { ProgressBar } from '../ProgressBar/ProgressBar'
+import { Volume } from '../Volume/Volume'
+import { Controls } from '../Controls/Controls'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const videoElement = useRef(null)
+
+    const {
+        volume,
+        isMuted,
+        progress,
+        isPlaying,
+        mediaTime,
+        duration,
+        handleClick,
+        handleProgress,
+        handleSkipBackward,
+        handleSkipForward,
+        handleVolumeMute,
+        handleVolumeChange,
+        handleTimeUpdate
+    } = updateVideoElement(videoElement)
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        {/* <!-- counter / duration --> */}
+                        <div className="timer--container duration" role="timer container">
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(duration)}
+                            </span>
+                        </div>
+                        {/* <!-- controls --> */}
+                        <div className='controls'>
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipBackward}>
+                                ⏮
+                                </button>
+                            </div>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
+                                }
+                                onClick={handleClick}
+                            />
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipForward}>
+                                ⏭
+                                </button>
+                            </div>
+                        </div>
+                        {/* <!-- counter / current time --> */}
+                        <div
+                        className="timer--container current--time"
+                        role="timer container"
+                        >
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(mediaTime)}
+                            </span>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+Now we will create three *css* files to style our *VideoPlayer* component differently, but in this situation we will not use pure *css*, instead we will use a preprocessor like *sass*.
+
+28. The first file will be called *_variables.scss* and will be in change of storing the custom properties, which when importing the file, in our *VideoControls.scss* will be invoked.
+
+```scss
+//_variables.scss
+
+:root {
+  // Primary colors
+  --dark-color : #0B0505;
+  --light-color: #ffffff;
+}
+
+// ========== VIEWPORT
+$width  : 100vw;
+$height : 100vh;
+// ========== SIZES
+$size   : 100%;
+$padding: 1.5rem;
+$radius : .5rem;
+// ========== FONTS
+$font-play: 'Play', sans-serif;
+$font-inter: 'Inter', sans-serif;
+$fnt-wgt   : .85;
+$fnt-sz    : calc(($padding * $fnt-wgt) + 1vmin);
+// ========== COLORS
+// Secondary colors
+$dark-blue: #11748A;
+$light-gray: #ecf0f1;
+```
+
+29. The second file will be called *VideoControls.scss* and will be in charge of giving styles to our *Controls* component.
+
+```scss
+// VideoControls.scss
+
+@import '_variables';
+
+.control--panel,
+.controls,
+.player--controls,
+.volume--container,
+.timer--container,
+.expand--container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control--panel {
+  gap: .25rem;
+  width: $size;
+  height: 4rem;
+  position: absolute;
+  bottom: -3.8rem;
+  background-color: hsl(180 10% 6%);
+  transition: bottom .7s ease-out;
+
+  .progress {
+    width: inherit;
+    height: .35rem;
+    position: absolute;
+    top: 0;
+    background-color: #677380;
+    &:hover { cursor: e-resize; }
+    &--bar {
+      width: 101%;
+      height: $size;
+      transition: width 650ms cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: absolute;
+      top: -.125rem;
+      left: 0;
+      transform: translate(-.3rem, 0);
+      border-radius: 0;
+      z-index: 2;
+      &:focus { outline: none; }
+      &:hover::-webkit-slider-thumb {
+        appearance: none;
+        width: .65rem;
+        height: .65rem;
+        border-radius: $size;
+        box-shadow: 0 0 0 .1rem #fff;
+        cursor: pointer;
+        transition: .5s
+      }
+    }
+  }
+
+  .volume--container {
+    width: auto;
+    justify-content: space-evenly;
+    .mute--btn { width: 2.0125rem; }
+    .slider {
+      appearance: none;
+      width: 5rem;
+      height: .25rem;
+      border-radius: $padding;
+      &:focus { outline: none; }
+      &::-webkit-slider-thumb {
+        appearance: none;
+        width: .75rem;
+        height: .75rem;
+        border-radius: $size;
+        background-color: $dark-blue;
+        box-shadow: 0 0 0 .1rem #fff;
+        cursor: pointer
+      }
+    }
+  }
+
+  .timer--container {
+    justify-content: center;
+    &.duration { margin-inline-start: 2rem; }
+    &.current--time { margin-inline-end: 2rem; }
+    .timer {
+      font-size: .75rem;
+      color: #fff;
+      font-family: $font-play;
+    }
+  }
+
+  .controls {
+    width: 12.375rem;
+    .skip--container {
+      .btn--small { width: 1.875rem; }
+    }
+    .controllers {
+      width: 8.0635rem;
+      .btn--medium { width: 1.35625rem; }
+      .btn--large { width: 2.75rem; }
+    }
+  }
+
+  .expand--container {
+    justify-content: center;
+    .pic-in-pic__btn,
+    .expand--btn { width: 2.125rem; }
+  }
+}
+```
+
+30. The third file will be called *VideoPlayer.scss* and will store feature-focused code to hide the control panel of our *VideoPlayer* component.
+
+```scss
+//VideoPlayer.scss
+
+@import '_variables';
+
+.figure {
+  width: $size;
+  max-width: 42rem;
+  margin: 0;
+  padding-inline: 1rem;
+
+  .hidden {
+    position: relative;
+    overflow: hidden;
+    &:hover .control--panel {
+      bottom: 0;
+      transition: bottom .5s ease-in
+    }
+  }
+
+  .figcaption {
+    width: $size;
+    height: 4rem;
+    .status,
+    .artist {
+      padding-inline-start: .35rem;
+      text-transform: capitalize;
+      font-family: $font-inter;
+    }
+
+    .status { 
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .artist { font-size: 1.25rem; }
+  }
+}
+```
+
+31. The last part is import the *scss* file into our *VideoPlayer* component like so.
+
+```js
+// VideoPlayer.js
+
+import React, {useRef} from 'react'
+import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
+import { formatTime } from '../../utils/formatTime'
+import { ProgressBar } from '../ProgressBar/ProgressBar'
+import { Volume } from '../Volume/Volume'
+import { Controls } from '../Controls/Controls'
+import video from '../assets/video/video-prueba.mp4'
+import '../../styles/VideoControls.scss'
+import '../../styles/VideoPlayer.scss'
+
+const VideoPlayer = () => {
+    const videoElement = useRef(null)
+
+    const {
+        volume,
+        isMuted,
+        progress,
+        isPlaying,
+        mediaTime,
+        duration,
+        handleClick,
+        handleProgress,
+        handleSkipBackward,
+        handleSkipForward,
+        handleVolumeMute,
+        handleVolumeChange,
+        handleTimeUpdate
+    } = updateVideoElement(videoElement)
+
+    return (
+        <figure className="figure">
+            <div className="player--container">
+                <div className="hidden">
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        width='645px'
+                        height='375px'
+                        loop={false}
+                        autoPlay={false}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                    <section className='panel--controls'>
+                        <ProgressBar
+                            className="progress--bar"
+                            onChange={handleProgress}
+                            value={progress}
+                        />
+                        <Volume
+                            max='100'
+                            mode={isMute ? '🔉' : '🔈'}
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            onClick={handleVolumeMute}
+                        />
+                        {/* <!-- counter / duration --> */}
+                        <div className="timer--container duration" role="timer container">
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(duration)}
+                            </span>
+                        </div>
+                        {/* <!-- controls --> */}
+                        <div className='controls'>
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipBackward}>
+                                ⏮
+                                </button>
+                            </div>
+                            <Controls
+                                state={
+                                    isPlaying ?
+                                        '⏸' :
+                                        '▶'
+                                }
+                                onClick={handleClick}
+                            />
+                            <div className="skip--container" role="skip buttons">
+                                <button onClick={handleSkipForward}>
+                                ⏭
+                                </button>
+                            </div>
+                        </div>
+                        {/* <!-- counter / current time --> */}
+                        <div
+                        className="timer--container current--time"
+                        role="timer container"
+                        >
+                            <span className="timer" data-timer="timer" role="timer">
+                                {formatTime(mediaTime)}
+                            </span>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </figure>
+    )
+}
+
+export default VideoPlayer
+```
+
+In the next few days we will update the *VideoPlayer* component, adding responsive web design to our project, as shown in the images stored in the figma folder.
+
+NOTE: ***the code above is an excerpt from my React Video Player repository, you can see the full code there.***
