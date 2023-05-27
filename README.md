@@ -130,7 +130,7 @@ const root = createRoot(container)
 root.render(<App/>)
 ```
 
-3. Create the :page_facing_up: App.js file and import it into our :page_facing_up index.js file, like the example above.
+3. Create the :page_facing_up: App.js file and import it into our :page_facing_up: index.js file, like the example above.
 
 ```js
 //App.js
@@ -150,7 +150,7 @@ const App () => {
 export default App
 ```
 
-4. We will create the :page_facing_up: VideoPlayer.js file that will be included in the :file_folder: folder that will have the same name as the file and this, at the same time, will be in the :file_folder: components folder, then we will import it in the :page_facing_up file : App.js, as in the previous example.
+4. We will create the :page_facing_up: VideoPlayer.js file that will be included in the :file_folder: folder that will have the same name as the file and this, at the same time, will be in the :file_folder: components folder, then we will import it in the :page_facing_up: file App.js, as in the previous example.
 
 Note: *All :file_folder: folders that will be used in the project must go in the :file_folder: components folder*.
 
@@ -276,8 +276,8 @@ import Controls from '../components/Controls/Controls'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
-    const [isPlaying, setIsPlaying] = useState(false)
     const videoRef = useRef(null)
+    const [isPlaying, setIsPlaying] = useState(false)
 
     useEffect(()=> {
 
@@ -328,8 +328,8 @@ import Controls from '../components/Controls/Controls'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
-    const [isPlaying, setIsPlaying] = useState(false)
     const videoRef = useRef(null)
+    const [isPlaying, setIsPlaying] = useState(false)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -425,8 +425,8 @@ import ProgressBar from '../components/ProgressBar/ProgressBar'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
-    const [isPlaying, setIsPlaying] = useState(false)
     const videoRef = useRef(null)
+    const [isPlaying, setIsPlaying] = useState(false)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -504,9 +504,9 @@ import ProgressBar from '../components/ProgressBar/ProgressBar'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [progress, setProgress] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -597,9 +597,9 @@ import ProgressBar from '../components/ProgressBar/ProgressBar'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [progress, setProgress] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -697,10 +697,10 @@ import ProgressBar from '../components/ProgressBar/ProgressBar'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -801,19 +801,11 @@ const Volume = ({max, value, mode, onClick, onChange}) => {
       </button>
       <input
         type="range"
-        name="slider"
         className="slider"
-        id="slide"
-        data-slider="slider"
         min="0"
         max={max}
         value={value}
         step="1"
-        aria-required="false"
-        aria-autocomplete="false"
-        aria-invalid="false"
-        autoComplete="false"
-        role="slider"
         onChange={onChange}
       />
     </div>
@@ -823,7 +815,7 @@ const Volume = ({max, value, mode, onClick, onChange}) => {
 export { Volume }
 ```
 
-15. Now we import our Volume component into VideoPlayer.
+15. Now we import our Volume component to *VideoPlayer* component.
 
 ```js
 //VideoPlayer.js
@@ -835,10 +827,10 @@ import Volume from '../components/Volume/Volume'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -931,11 +923,11 @@ export default VideoPlayer
 
 ```js
 const [volume, setVolume] = useState(0)
-const [isMute, setIsMute] = useState(false)
+const [isMuted, setIsMuted] = useState(false)
 
 useEffect(() => {
-    const onMute = () => setIsMute(true)
-    const onUnMute = () => setIsMute(false)
+    const onMute = () => setIsMuted(true)
+    const onUnMute = () => setIsMuted(false)
 
     element.addEventListener('mute', onMute)
     element.addEventListener('unmute', onUnMute)
@@ -956,11 +948,11 @@ const handleVolumeChange = (e) => {
 const handleVolumeMute = () => {
     if(!videoRef.current) return;
 
-    isMute ? 
+    isMuted ? 
         videoRef.current.muted = false :
         videoRef.current.muted = true
     
-    setIsMute(!isMute)
+    setIsMute(!isMuted)
 }
 ```
 
@@ -976,12 +968,12 @@ import Volume from '../components/Volume/Volume'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -990,8 +982,8 @@ const VideoPlayer = () => {
 
         const onPlay = () => isPlaying(true)
         const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
+        const onMute = () => setIsMuted(true)
+        const onUnMute = () => setIsMuted(false)
 
         element.addEventListener('play', onPlay)
         element.addEventListener('playing', onPlay)
@@ -1041,7 +1033,7 @@ const VideoPlayer = () => {
         volumeMute ?
             videoRef.current.muted = false :
             videoRef.current.muted = true
-        setIsMute(!isMute)
+        setIsMuted(!isMuted)
     }
 
     return (
@@ -1065,7 +1057,7 @@ const VideoPlayer = () => {
                         />
                         <Volume
                             max='100'
-                            mode={isMute ? 'Unmute' : 'Mute'}
+                            mode={isMuted ? 'Unmute' : 'Mute'}
                             value={volume}
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
@@ -1103,12 +1095,12 @@ import Volume from '../components/Volume/Volume'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -1117,8 +1109,8 @@ const VideoPlayer = () => {
 
         const onPlay = () => isPlaying(true)
         const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
+        const onMute = () => setIsMuted(true)
+        const onUnMute = () => setIsMuted(false)
 
         element.addEventListener('play', onPlay)
         element.addEventListener('playing', onPlay)
@@ -1168,7 +1160,7 @@ const VideoPlayer = () => {
         volumeMute ?
             videoRef.current.muted = false :
             videoRef.current.muted = true
-        setIsMute(!isMute)
+        setIsMuted(!isMuted)
     }
 
     return (
@@ -1192,7 +1184,7 @@ const VideoPlayer = () => {
                         />
                         <Volume
                             max='100'
-                            mode={isMute ? '🔉' : '🔈'}
+                            mode={isMuted ? '🔉' : '🔈'}
                             value={volume}
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
@@ -1261,13 +1253,13 @@ import Volume from '../components/Volume/Volume'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
     const [duration, setDuration] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -1276,8 +1268,8 @@ const VideoPlayer = () => {
 
         const onPlay = () => isPlaying(true)
         const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
+        const onMute = () => setIsMuted(true)
+        const onUnMute = () => setIsMuted(false)
 
         element.addEventListener('play', onPlay)
         element.addEventListener('playing', onPlay)
@@ -1328,7 +1320,7 @@ const VideoPlayer = () => {
         volumeMute ?
             videoRef.current.muted = false :
             videoRef.current.muted = true
-        setIsMute(!isMute)
+        setIsMuted(!isMuted)
     }
 
     // https://github.com/lkopacz/egghead-react-a11y-audio-player
@@ -1367,7 +1359,7 @@ const VideoPlayer = () => {
                         />
                         <Volume
                             max='100'
-                            mode={isMute ? '🔉' : '🔈'}
+                            mode={isMuted ? '🔉' : '🔈'}
                             value={volume}
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
@@ -1415,13 +1407,13 @@ import Volume from '../components/Volume/Volume'
 import video from '../assets/video/video-prueba.mp4'
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
     const [duration, setDuration] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -1430,8 +1422,8 @@ const VideoPlayer = () => {
 
         const onPlay = () => isPlaying(true)
         const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
+        const onMute = () => setIsMuted(true)
+        const onUnMute = () => setIsMuted(false)
 
         element.addEventListener('play', onPlay)
         element.addEventListener('playing', onPlay)
@@ -1482,7 +1474,7 @@ const VideoPlayer = () => {
         volumeMute ?
             videoRef.current.muted = false :
             videoRef.current.muted = true
-        setIsMute(!isMute)
+        setIsMuted(!isMuted)
     }
 
     // https://github.com/lkopacz/egghead-react-a11y-audio-player
@@ -1521,7 +1513,7 @@ const VideoPlayer = () => {
                         />
                         <Volume
                             max='100'
-                            mode={isMute ? '🔉' : '🔈'}
+                            mode={isMuted ? '🔉' : '🔈'}
                             value={volume}
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
@@ -1625,13 +1617,13 @@ function formatTime(time){
 }
 
 const VideoPlayer = () => {
+    const videoRef = useRef(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0)
     const [progress, setProgress] = useState(0)
     const [mediaTime, setMediaTime] = useState(0)
     const [duration, setDuration] = useState(0)
-    const videoRef = useRef(null)
 
     useEffect(()=> {
         const element = videoRef.current
@@ -1640,8 +1632,8 @@ const VideoPlayer = () => {
 
         const onPlay = () => isPlaying(true)
         const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
+        const onMute = () => setIsMuted(true)
+        const onUnMute = () => setIsMuted(false)
 
         element.addEventListener('play', onPlay)
         element.addEventListener('playing', onPlay)
@@ -1692,7 +1684,7 @@ const VideoPlayer = () => {
         volumeMute ?
             videoRef.current.muted = false :
             videoRef.current.muted = true
-        setIsMute(!isMute)
+        setIsMuted(!isMuted)
     }
 
     // https://github.com/lkopacz/egghead-react-a11y-audio-player
@@ -1731,7 +1723,7 @@ const VideoPlayer = () => {
                         />
                         <Volume
                             max='100'
-                            mode={isMute ? '🔉' : '🔈'}
+                            mode={isMuted ? '🔉' : '🔈'}
                             value={volume}
                             onChange={handleVolumeChange}
                             onClick={handleVolumeMute}
@@ -1782,121 +1774,7 @@ const VideoPlayer = () => {
 export default VideoPlayer
 ```
 
-25. Now it's time to make our *VideoPlayer* component clearer and separate the logic from the code to make it more consistent with our proyect.
-
-First, we separate the code from our *VideoPlayer* component and create a new file called *updateVideoElement.js* or you can named as you want.
-
-```js
-// updateVideoElement.js
-
-import React, {useState, useEffect} from 'react'
-
-const updateVideoElement = (videoRef) => {
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [isMute, setIsMute] = useState(false)
-    const [volume, setVolume] = useState(0)
-    const [progress, setProgress] = useState(0)
-    const [mediaTime, setMediaTime] = useState(0)
-    const [duration, setDuration] = useState(0)
-
-    useEffect(()=> {
-        const element = videoRef.current
-        if(!element) return
-        // The piece of code shown below was taken from the following YouTube link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
-
-        const onPlay = () => isPlaying(true)
-        const onPause = () => isPlaying(false)
-        const onMute = () => setIsMute(true)
-        const onUnMute = () => setIsMute(false)
-
-        element.addEventListener('play', onPlay)
-        element.addEventListener('playing', onPlay)
-        element.addEventListener('pause', onPause)
-        element.addEventListener('mute', onMute)
-        element.addEventListener('unmute', onUnMute)
-
-        return () => {
-            element.removeEventListener('play', onPlay)
-            element.removeEventListener('playing', onPlay)
-            element.removeEventListener('pause', onPause)
-            element.removeEventListener('mute', onMute)
-            element.removeEventListener('unmute', onUnMute)
-        }
-    },[videoRef.current, progress])
-
-    const handleClick = () => {
-        if(!videoRef.current) return
-        isPlaying ? 
-            videoRef.current.pause() :
-            videoRef.current.play()
-    }
-
-    const handleProgress = (e) => {
-        const value = Number(e.target.value);
-        const {duration} = videoRef.current;
-        videoRef.current.currentTime = (duration / 100) * value;
-        setProgress(value)
-    }
-
-    const handleTimeUpdate = () => {
-        const {currentTime, duration} = videoRef.current;
-        const progress = parseInt(Number(currentTime / duration) * 100);
-        setMediaTime(currentTime);
-        setProgress(progress)
-        setDuration(duration)
-    }
-
-    const handleVolumeChange = (e) => {
-        const value = Number(e.target.value);
-        const volRange = value / 100;
-        videoRef.current.volume = volRange;
-        setVolume(value)
-    }
-
-    const handleVolumeMute = () => {
-        if(!videoRef.current) return;
-        volumeMute ?
-            videoRef.current.muted = false :
-            videoRef.current.muted = true
-        setIsMute(!isMute)
-    }
-
-    // https://github.com/lkopacz/egghead-react-a11y-audio-player
-    const handleSkipBackward = () => {
-        const {currentTime} = videoRef.current;
-        const newTime = Math.max(currentTime - 10, 0);
-        videoRef.current.currentTime = newTime;
-        setMediaTime(newTime)
-    }
-
-    const handleSkipForward = () => {
-        const {currentTime} = videoRef.current;
-        const newTime = Math.min(currentTime + 30, duration);
-        videoRef.current.currentTime = newTime;
-        setMediaTime(newTime)
-    }
-
-    return {
-        volume,
-        isMuted,
-        progress,
-        isPlaying,
-        mediaTime,
-        duration,
-        handleClick,
-        handleProgress,
-        handleSkipBackward,
-        handleSkipForward,
-        handleTimeUpdate,
-        handleVolumeMute,
-        handleVolumeChange
-    }
-}
-
-export {updateVideoElement}
-```
-
-26. In this part we separate the *formatTime.js* file to make our *VideoPlayer* component more clear.
+25. In this part we separate the *formatTime.js* file to make our *VideoPlayer* component more clear.
 
 ```js
 // https://github.com/lkopacz/egghead-react-a11y-audio-player
@@ -1918,116 +1796,13 @@ function formatTime(time){
 }
 ```
 
-27. In this section we will see how our *VideoPlayer* component is clearer and understandable, we also import other components like *ProgressBar*, *Volume* and *Controls*, we even import the *updateVideoElemet* and *formatTime* files
-
-```js
-// VideoPlayer.js
-
-import React, {useRef} from 'react'
-import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
-import { formatTime } from '../../utils/formatTime'
-import { ProgressBar } from '../ProgressBar/ProgressBar'
-import { Volume } from '../Volume/Volume'
-import { Controls } from '../Controls/Controls'
-import video from '../assets/video/video-prueba.mp4'
-
-const VideoPlayer = () => {
-    const videoElement = useRef(null)
-
-    const {
-        volume,
-        isMuted,
-        progress,
-        isPlaying,
-        mediaTime,
-        duration,
-        handleClick,
-        handleProgress,
-        handleSkipBackward,
-        handleSkipForward,
-        handleVolumeMute,
-        handleVolumeChange,
-        handleTimeUpdate
-    } = updateVideoElement(videoElement)
-
-    return (
-        <figure className="figure">
-            <div className="player--container">
-                <div className="hidden">
-                    <video
-                        src={video}
-                        ref={videoElement}
-                        width='645px'
-                        height='375px'
-                        loop={false}
-                        autoPlay={false}
-                        onTimeUpdate={handleTimeUpdate}
-                    ></video>
-                    <section className='panel--controls'>
-                        <ProgressBar
-                            className="progress--bar"
-                            onChange={handleProgress}
-                            value={progress}
-                        />
-                        <Volume
-                            max='100'
-                            mode={isMute ? '🔉' : '🔈'}
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            onClick={handleVolumeMute}
-                        />
-                        {/* <!-- counter / duration --> */}
-                        <div className="timer--container duration" role="timer container">
-                            <span className="timer" data-timer="timer" role="timer">
-                                {formatTime(duration)}
-                            </span>
-                        </div>
-                        {/* <!-- controls --> */}
-                        <div className='controls'>
-                            <div className="skip--container" role="skip buttons">
-                                <button onClick={handleSkipBackward}>
-                                ⏮
-                                </button>
-                            </div>
-                            <Controls
-                                state={
-                                    isPlaying ?
-                                        '⏸' :
-                                        '▶'
-                                }
-                                onClick={handleClick}
-                            />
-                            <div className="skip--container" role="skip buttons">
-                                <button onClick={handleSkipForward}>
-                                ⏭
-                                </button>
-                            </div>
-                        </div>
-                        {/* <!-- counter / current time --> */}
-                        <div
-                        className="timer--container current--time"
-                        role="timer container"
-                        >
-                            <span className="timer" data-timer="timer" role="timer">
-                                {formatTime(mediaTime)}
-                            </span>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </figure>
-    )
-}
-
-export default VideoPlayer
-```
-
 Now we will create three *css* files to style our *VideoPlayer* component differently, but in this situation we will not use pure *css*, instead we will use a preprocessor like *sass*.
 
-28. The first file will be called *_variables.scss* and will be in change of storing the custom properties, which when importing the file, in our *VideoControls.scss* will be invoked.
+26. The first file will be called *_variables.scss* and will be in change of storing the custom properties, which when importing the file, in our *VideoControls.scss* will be invoked.
 
 ```scss
 //_variables.scss
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Play&display=swap');
 
 :root {
   // Primary colors
@@ -2053,7 +1828,7 @@ $dark-blue: #11748A;
 $light-gray: #ecf0f1;
 ```
 
-29. The second file will be called *VideoControls.scss* and will be in charge of giving styles to our *Controls* component.
+27. The second file will be called *VideoControls.scss* and will be in charge of giving styles to our *Controls* component.
 
 ```scss
 // VideoControls.scss
@@ -2163,7 +1938,7 @@ $light-gray: #ecf0f1;
 }
 ```
 
-30. The third file will be called *VideoPlayer.scss* and will store feature-focused code to hide the control panel of our *VideoPlayer* component.
+28. The third file will be called *VideoPlayer.scss* and will store feature-focused code to hide the control panel of our *VideoPlayer* component.
 
 ```scss
 //VideoPlayer.scss
@@ -2205,13 +1980,12 @@ $light-gray: #ecf0f1;
 }
 ```
 
-31. The last part is import the *scss* file into our *VideoPlayer* component like so.
+39. Now we import the *scss* file to our *VideoPlayer* component like so.
 
 ```js
 // VideoPlayer.js
 
-import React, {useRef} from 'react'
-import { updateVideoElement } from '../../updateVideoElement/updateVideoElement'
+import React, {useState, useEffect, useRef} from 'react'
 import { formatTime } from '../../utils/formatTime'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { Volume } from '../Volume/Volume'
@@ -2221,96 +1995,173 @@ import '../../styles/VideoControls.scss'
 import '../../styles/VideoPlayer.scss'
 
 const VideoPlayer = () => {
-    const videoElement = useRef(null)
-
-    const {
-        volume,
-        isMuted,
-        progress,
-        isPlaying,
-        mediaTime,
-        duration,
-        handleClick,
-        handleProgress,
-        handleSkipBackward,
-        handleSkipForward,
-        handleVolumeMute,
-        handleVolumeChange,
-        handleTimeUpdate
-    } = updateVideoElement(videoElement)
-
-    return (
-        <figure className="figure">
-            <div className="player--container">
-                <div className="hidden">
-                    <video
-                        src={video}
-                        ref={videoElement}
-                        width='645px'
-                        height='375px'
-                        loop={false}
-                        autoPlay={false}
-                        onTimeUpdate={handleTimeUpdate}
-                    ></video>
-                    <section className='panel--controls'>
-                        <ProgressBar
-                            className="progress--bar"
-                            onChange={handleProgress}
-                            value={progress}
-                        />
-                        <Volume
-                            max='100'
-                            mode={isMute ? '🔉' : '🔈'}
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            onClick={handleVolumeMute}
-                        />
-                        {/* <!-- counter / duration --> */}
-                        <div className="timer--container duration" role="timer container">
-                            <span className="timer" data-timer="timer" role="timer">
-                                {formatTime(duration)}
-                            </span>
-                        </div>
-                        {/* <!-- controls --> */}
-                        <div className='controls'>
-                            <div className="skip--container" role="skip buttons">
-                                <button onClick={handleSkipBackward}>
-                                ⏮
-                                </button>
-                            </div>
-                            <Controls
-                                state={
-                                    isPlaying ?
-                                        '⏸' :
-                                        '▶'
-                                }
-                                onClick={handleClick}
-                            />
-                            <div className="skip--container" role="skip buttons">
-                                <button onClick={handleSkipForward}>
-                                ⏭
-                                </button>
-                            </div>
-                        </div>
-                        {/* <!-- counter / current time --> */}
-                        <div
-                        className="timer--container current--time"
-                        role="timer container"
-                        >
-                            <span className="timer" data-timer="timer" role="timer">
-                                {formatTime(mediaTime)}
-                            </span>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </figure>
-    )
+    //...
 }
 
 export default VideoPlayer
 ```
 
-In the next few days we will update the *VideoPlayer* component, adding responsive web design to our project, as shown in the images stored in the figma folder.
+30. If you want to separate the logic from the code in a new file, it's up to you to do so, like so.
 
-NOTE: ***the code above is an excerpt from my React Video Player repository, you can see the full code there.***
+```js
+// updateVideoPlayer
+import React, {useState, useEffect} from 'react'
+
+export const updateVideoPlayer = (videoRef) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [volume, setVolume] = useState(10);
+    const [mediaTime, setMediaTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+
+    // How to create a React Video Player
+    // Go to the following YouTube video link: https://www.youtube.com/watch?v=Y9TL_43X3Lc&t=1444s by FullStack Mastery
+
+    useEffect(() => {
+        const videoElement = videoRef.current;
+        if (!videoElement) return;
+
+        const onPlay = () => setIsPlaying(true);
+        const onPause = () => setIsPlaying(false);
+        const onMute = () => setIsMuted(true);
+        const onUnMute = () => setIsMuted(false);
+
+        videoElement.addEventListener("play", onPlay);
+        videoElement.addEventListener("playing", onPlay);
+        videoElement.addEventListener("pause", onPause);
+        videoElement.addEventListener("mute", onMute);
+        videoElement.addEventListener("unmute", onUnMute);
+
+        return () => {
+            videoElement.removeEventListener("play", onPlay);
+            videoElement.removeEventListener("playing", onPlay);
+            videoElement.removeEventListener("pause", onPause);
+            videoElement.removeEventListener("mute", onMute);
+            videoElement.removeEventListener("unmute", onUnMute);
+        };
+    }, [videoRef.current, progress]);
+
+    const handleClick = () => {
+        if (!videoRef.current) return;
+        isPlaying ? videoRef.current.pause() : videoRef.current.play();
+    };
+
+    const handleTimeUpdate = () => {
+        const { currentTime, duration } = videoRef.current;
+        const progress = parseInt(Number(currentTime / duration) * 100);
+        setMediaTime(currentTime);
+        setProgress(progress);
+        setDuration(duration);
+    };
+
+    const handleProgress = (e) => {
+        const value = e.target.valueAsNumber;
+        const { duration } = videoRef.current;
+        videoRef.current.currentTime = (duration / 100) * value;
+        setProgress(value);
+    };
+
+    const handleVolumeChange = (e) => {
+        const newRange = e.target.valueAsNumber;
+        const volumeRange = newRange / 100;
+        videoRef.current.volume = volumeRange;
+        setVolume(newRange);
+    };
+
+    const handleVolumeMute = () => {
+        if (!videoRef.current) return;
+        isMuted
+            ? (videoRef.current.muted = false)
+            : (videoRef.current.muted = true);
+        setIsMuted(!isMuted);
+    };
+
+    // https://github.com/lkopacz/egghead-react-a11y-audio-player
+    const handleSkipBackward = () => {
+        const { currentTime } = videoRef.current;
+        const newTime = Math.max(currentTime - 10, 0);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime);
+    };
+
+    const handleSkipForward = () => {
+        const { currentTime } = videoRef.current;
+        const newTime = Math.min(currentTime + 30, duration);
+        videoRef.current.currentTime = newTime;
+        setMediaTime(newTime);
+    };
+
+    return {
+        isPlaying,
+        isMuted,
+        progress,
+        duration,
+        volume,
+        mediaTime,
+        handleClick,
+        handleTimeUpdate,
+        handleProgress,
+        handleVolumeMute,
+        handleVolumeChange,
+        handleSkipBackward,
+        handleSkipForward
+    }
+}
+```
+
+31. Once separated the code in a new file, we will import this file in our *VideoPlayer* component like so.
+
+```js
+// VideoPlayer.js
+
+import {updateVideoPlayer} from '../../updateVideoPlayer/updateVideoPlayer'
+```
+
+32. Now we will update our *VideoPlayer*, adding new code.
+
+```js
+// VideoPlayer.js
+import React, {useRef} from 'react'
+import {updateVideoPlayer} from '../../updateVideoPlayer/updateVideoPlayer'
+import video from '../assets/video/video-prueba.mp4'
+
+const VideoPlayer = () => {
+    const videoElement = useRef(null)
+
+    const {
+        isPlaying,
+        isMuted,
+        progress,
+        duration,
+        volume,
+        mediaTime,
+        handleClick,
+        handleTimeUpdate,
+        handleProgress,
+        handleVolumeMute,
+        handleVolumeChange,
+        handleSkipBackward,
+        handleSkipForward
+    } = updateVideoPlayer(videoElement)
+
+    return (
+        <figure className='figure'>
+            <div className='player--container'>
+                <div className='hidden'>
+                    <video
+                        src={video}
+                        ref={videoElement}
+                        onClick={handleClick}
+                        onTimeUpdate={handleTimeUpdate}
+                    ></video>
+                </div>
+            </div>
+        </figure>
+    )
+}
+```
+
+As soon as posible, we will update the *VideoPlayer* component.
+
+**NOTE:** *the code above is an excerpt from my React Video Player repository, you can see the full code there.*
