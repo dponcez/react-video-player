@@ -3,9 +3,8 @@ import { VideoPlayer } from '../VideoPlayer/VideoPlayer'
 import { Navigation } from '../Navigation/Navigation'
 import { DarkMode } from '../DarkMode/DarkMode'
 import { ThemeContext } from '../Context/Context'
-import darkMode from "../../assets/icons/dark-switch.png";
-import lightMode from "../../assets/icons/light-switch.png";
-import { video_data } from '../../assets/data/video_data'
+import darkMode from "../../assets/icons/dark-switch.png"
+import lightMode from "../../assets/icons/light-switch.png"
 import '../../styles/Main.scss'
 
 const Main = () => {
