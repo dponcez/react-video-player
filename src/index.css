@@ -1,11 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&family=Play&display=swap');
-
 :root {
     --base-color: #0f131f;
     --font-color: #ffffff;
     --padding: 0.5rem 1.5rem;
-    --font-play: 'Play', sans-serif;
-    --font-Inter: 'inter', sans-serif;
     --unit: 50;
     --font-size: calc((var(--unit) / 15) * 1vmin);
     --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Catarell', 'Fira Sans', 'Droid Sans', 'Helvetica neue', 'Ubuntu', 'Open Sans', system-ui, sans-serif;
