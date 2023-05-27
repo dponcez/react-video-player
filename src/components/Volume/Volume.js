@@ -11,29 +11,14 @@ const Volume = ({max, value, mode, onClick, onChange}) => {
         onClick={onClick}
       >
         {mode}
-        {/* <img
-          src={soundOn}
-          className="volume-up"
-          aria-label="icon sound on"
-          role="icon"
-          aria-describedby="icon sound"
-        /> */}
       </button>
       <input
         type="range"
-        name="slider"
         className="slider"
-        id="slide"
-        data-slider="slider"
         min="0"
         max={max}
         value={value}
         step="1"
-        aria-required="false"
-        aria-autocomplete="false"
-        aria-invalid="false"
-        autoComplete="false"
-        role="slider"
         onChange={onChange}
       />
     </div>
