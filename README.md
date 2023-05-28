@@ -16,7 +16,7 @@ NOTE: **The copyright of the video stored in this project is under the license o
 8. In your Command Prompt or *Command Line Interfaces* **CLI**, type (*code .*) without parentheses, to open your *VSCode* or *Visual Studio Code*.
 9. Open your *Github Account* and create a new repository.
 10. In your **CLI** type *git init* to initialize a new *.git* file.
-11. In your **CLI** type the following command: *npm init* to create your own React files.
+11. In your **CLI** type the following command: *npm init -y* to create a package.json file.
 12. Follow the setup steps.
 13. Create a *.gitignore* file.
 You must include files that your project will not include in your repository:
